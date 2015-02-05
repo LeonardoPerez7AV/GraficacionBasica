@@ -10,7 +10,7 @@ and open the template in the editor.
 <html>
 <head>
 
-<title>Semana3</title>
+<title> Week3 </title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script type="text/javascript" src="./glMatrix-0.9.5.min.js"></script>
@@ -135,9 +135,11 @@ glEnableClientState(GL_VERTEX_ARRAY);
 
 //Variables de Colores y posicion
     var triangleVertexPositionBuffer;
-    var squareVertexPositionBuffer;    
     var triangleVertexColorBuffer;
-    var squareVertexColorBuffer;
+    var pentaVertexPositionBuffer;    //4-5   
+    var pentaVertexColorBuffer;       //4-5
+    var exaVertexPositionBuffer;      //6
+    var exagleVertexColorBuffer;      //6
 
 //Dibujar el triangulo
     function initBuffers() {
@@ -149,8 +151,8 @@ glEnableClientState(GL_VERTEX_ARRAY);
              1.0, -1.0,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        triangleVertexPositionBuffer.itemSize = 3;
-        triangleVertexPositionBuffer.numItems = 3;
+        triangleVertexPositionBuffer.itemSize = 3;//elementos del vector x,y,z 
+        triangleVertexPositionBuffer.numItems = 3;//numero de vertices
         
         triangleVertexColorBuffer =gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
@@ -164,23 +166,23 @@ glEnableClientState(GL_VERTEX_ARRAY);
         triangleVertexColorBuffer.numItems = 3;//Numero del color
         
         
-        //Dibujar cuadro 
-        squareVertexPositionBuffer = gl.createBuffer();//Posicion
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+        //Dibujar pentagono
+        pentaVertexPositionBuffer = gl.createBuffer();//Posicion
+        gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexPositionBuffer);
         vertices = [
-           -2.0,   0.0,  0.0, //1
-           -1.0,  -2.0,  0.0, //2
+           -2.0,   0.0,  0.0,  //1
+           -1.0,  -2.0,  0.0,  //2
             0.0,   1.5,  0.0,  //3          
-            1.0,  -2.0,  0.0, //2
+            1.0,  -2.0,  0.0,  //2
             2.0,   0.0,  0.0   //3 
                 
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        squareVertexPositionBuffer.itemSize = 3;
-        squareVertexPositionBuffer.numItems = 5;//numeros de elementos
+        pentaVertexPositionBuffer.itemSize = 3;//elementos de los componentes x,y,z
+        pentaVertexPositionBuffer.numItems = 5;//numeros de elementos
         
-        squareVertexColorBuffer = gl.createBuffer();//Color del cuadro
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+        pentaVertexColorBuffer = gl.createBuffer();//Color del cuadro
+        gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
         colors = []
         for (var i=0; i < 4; i++) { //*cambio
 
@@ -194,8 +196,43 @@ glEnableClientState(GL_VERTEX_ARRAY);
         }
         
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        squareVertexColorBuffer.itemSize = 4;
-        squareVertexColorBuffer.numItems = 4;
+        pentaVertexColorBuffer.itemSize = 3;//elementos componentes x,y,z
+        pentaVertexColorBuffer.numItems = 4;
+        
+        
+        //Dibujar exagono 
+        exaVertexPositionBuffer = gl.createBuffer();//Posicion
+        gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexPositionBuffer);
+        vertices = [
+           -3.0,   0.0,  0.0,  //1
+           -1.5,  -2.5,  0.0,  //2
+           -1.5,   2.5,  0.0,  //3 
+            1.5,  -2.5,  0.0,  //4
+            1.5,   2.5,  0.0,  //5
+            3.0,   0.0,  0.0   //6 
+                
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        exaVertexPositionBuffer.itemSize = 3;//elementos de los componentes x,y,z
+        exaVertexPositionBuffer.numItems = 6;//numeros de elementos vertices
+        
+        exaVertexColorBuffer = gl.createBuffer();//Color del cuadro
+        gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexColorBuffer);
+        colors = []
+        for (var i=0; i < 4; i++) { //*cambio
+
+            var colors= [
+                1.0,0.0,0.0,1.0, //color del vertice rojo
+                0.0,1.0,0.0,1.0, //color del vertice verde
+                0.0,0.0,0.0,0.0,
+                0.0,0.0,1.0,1.0, //color del vertice azul  
+                1.0,0.0,1.0,1.0    //*cambio 
+            ];
+        }
+        
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+        exaVertexColorBuffer.itemSize = 3;//elementos componentes x,y,z
+        exaVertexColorBuffer.numItems = 4;
         
     }
 
@@ -208,28 +245,33 @@ glEnableClientState(GL_VERTEX_ARRAY);
         //escala del dibujo
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
         mat4.identity(mvMatrix);
-
+        
+        //translate del triangulo
         mat4.translate(mvMatrix, [-1.5, -1.0, -9.0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
-        
+        setMatrixUniforms();        
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-        
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);        
         gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
 
-
+        //translate del pentagono
         mat4.translate(mvMatrix, [3.0, 0.0, -6.0]); 
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
+        gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexPositionBuffer);//4-5
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,pentaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
+        gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pentaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
         setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, pentaVertexPositionBuffer.numItems);//4-5
+        
+            //translate del exagonal
+        mat4.translate(mvMatrix, [-2.0, 6.0, -6.0]); 
+        gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexPositionBuffer);//4-5
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,exaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
+        gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, exaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, exaVertexPositionBuffer.numItems);//4-5
     }
 
 
@@ -252,7 +294,7 @@ glEnableClientState(GL_VERTEX_ARRAY);
 
 
 <body onload="webGLStart();">
-<canvas id="leccion1-canvas" style="border: none;" width="500" height="500"></canvas>
+<canvas id="leccion1-canvas" style="border: none;" width="800" height="500"></canvas>
 
 
 </body>

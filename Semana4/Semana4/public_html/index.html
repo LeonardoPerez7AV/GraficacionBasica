@@ -10,7 +10,7 @@ and open the template in the editor.
 <html>
 <head>
 
-<title> Week3 </title>
+<title> Week4 </title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script type="text/javascript" src="./glMatrix-0.9.5.min.js"></script>
@@ -140,7 +140,7 @@ varying vec4 vColor;
     
 
 function degToRad(degrees) {//sem4
-        return degrees * Math.PI / 180;//
+        return degrees * Math.PI / 180;//sem4
 }//sem4
 
 
@@ -181,27 +181,35 @@ function mvPopMatrix() {
         triangleVertexPositionBuffer = gl.createBuffer();//Posicion del triangulo
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         var vertices = [
-             0.0,  1.0,  0.0,
-            -1.0, -1.0,  0.0,
-             1.0, -1.0,  0.0
+             0.0,  4.0,  0.0, //a
+            -2.0,  0.0, -2.0, //b
+             2.0,  0.0, -2.0, //c
+              2.0,  0.0,   2.0,  //d
+              0.0,  4.0,   0.0,  //e
+             -2.0,  0.0,   2.0,  //f
+             -2.0,  0.0,  -2.0   //g
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;//elementos del vector x,y,z 
-        triangleVertexPositionBuffer.numItems = 3;//numero de vertices
+        triangleVertexPositionBuffer.numItems = 7;//numero de vertices
         
         triangleVertexColorBuffer =gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
         var colors = [
             1.0, 0.0, 0.0, 1.0, //color del vertice rojo arriba
             0.0, 1.0, 0.0, 1.0, //color del vertice verde abajo izq.
-            0.0, 0.0, 1.0, 1.0  // color del vertice azul abajo der.
+            0.0, 0.0, 1.0, 1.0, // color del vertice azul abajo der.
+             1.0, 0.0, 1.0, 1.0,  //*cambio 
+             1.0, 0.0, 0.0, 1.0,  //color del vertice rojo 
+             0.0, 0.0, 1.0, 1.0,  // color del vertice azul 
+             0.0, 1.0, 0.0, 1.0   //color del vertice verde 
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        triangleVertexColorBuffer.itemSize = 4;//Tamano del color
-        triangleVertexColorBuffer.numItems = 3;//Numero del color
+        triangleVertexColorBuffer.itemSize = 3;//Tamano del color
+        triangleVertexColorBuffer.numItems = 1;//Numero vertices del color
         
         
-        //Dibujar pentagono
+//Dibujar pentagono
         pentaVertexPositionBuffer = gl.createBuffer();//Posicion
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexPositionBuffer);
         vertices = [
@@ -214,7 +222,7 @@ function mvPopMatrix() {
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         pentaVertexPositionBuffer.itemSize = 3;//elementos de los componentes x,y,z
-        pentaVertexPositionBuffer.numItems = 5;//numeros de elementos
+        pentaVertexPositionBuffer.numItems = 5;//numeros de vertices
         
         pentaVertexColorBuffer = gl.createBuffer();//Color del cuadro
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
@@ -231,11 +239,11 @@ function mvPopMatrix() {
         }
         
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        pentaVertexColorBuffer.itemSize = 3;//elementos componentes x,y,z
-        pentaVertexColorBuffer.numItems = 4;
+        pentaVertexColorBuffer.itemSize = 3;//intensidad color componentes x,y,z
+        pentaVertexColorBuffer.numItems = 3;
         
         
-        //Dibujar exagono 
+//Dibujar exagono 
         exaVertexPositionBuffer = gl.createBuffer();//Posicion
         gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexPositionBuffer);
         vertices = [
@@ -271,52 +279,52 @@ function mvPopMatrix() {
         
     }
 
-//Aqui se manda a imprimir el dibujo
-    function drawScene() {
-        
-        
-       
+//Aqui se manda a dibujar el dibujo
+    function drawScene() {           
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
-        //escala del dibujo
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+//escala del dibujo
+        mat4.perspective(50, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
         mat4.identity(mvMatrix);
         
-        //translate del triangulo
-        mat4.translate(mvMatrix, [-1.5, -1.0, -9.0]);
-        
-    mvPushMatrix();//sem4
-    mat4.rotate(mvMatrix, degToRad(rTri), [0, 1, 0]);//sem4
+//translate del triangulo
+        mat4.translate(mvMatrix, [-3.0, -1.0, -20.0]);        
+       mvPushMatrix();//sem4
+        mat4.rotate(mvMatrix, degToRad(rTri), [0, 1, 0]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         setMatrixUniforms();        
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);        
-        gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
-        mvPopMatrix();//sem4
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, triangleVertexPositionBuffer.numItems);//sem4
+       mvPopMatrix();//sem4
 
-        //translate del pentagono
-        mat4.translate(mvMatrix, [3.0, 0.0, -6.0]); 
-        mvPushMatrix();//sem4
-        mat4.rotate(mvMatrix, degToRad(rSquare), [0, 1, 0]);//sem4
+//translate del pentagono
+        mat4.translate(mvMatrix, [6.0, 2.0, 0.0]); 
+     mvPushMatrix();//sem4
+     mat4.rotate(mvMatrix, degToRad(rSquare), [0, 0, 1]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexPositionBuffer);//4-5
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,pentaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pentaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, pentaVertexPositionBuffer.numItems);//4-5
+    mvPopMatrix();
        
         
-            //translate del exagonal
-        mat4.translate(mvMatrix, [-2.0, 0.0, -7.0]); 
+//translate del exagonal
+ mvPushMatrix();//sem4
+    mat4.rotate(mvMatrix, degToRad(rSquare), [0, 1, 0]);//sem4
+        mat4.translate(mvMatrix, [3.0, 1.0, -9.0]); 
+   
         gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexPositionBuffer);//4-5
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,exaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, exaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, exaVertexPositionBuffer.numItems);//4-5
- mvPopMatrix();
+    mvPopMatrix();
     }
 
 

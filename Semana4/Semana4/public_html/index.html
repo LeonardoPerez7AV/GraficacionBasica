@@ -187,26 +187,27 @@ function mvPopMatrix() {
               2.0,  0.0,   2.0,  //d
               0.0,  4.0,   0.0,  //e
              -2.0,  0.0,   2.0,  //f
-             -2.0,  0.0,  -2.0   //g
+             -2.0,  0.0,  -2.0,  //g
+              2.0,  0.0,   2.0   //h
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;//elementos del vector x,y,z 
-        triangleVertexPositionBuffer.numItems = 7;//numero de vertices
+        triangleVertexPositionBuffer.numItems = 8;//numero de vertices
         
         triangleVertexColorBuffer =gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
         var colors = [
-            1.0, 0.0, 0.0, 1.0, //color del vertice rojo arriba
-            0.0, 1.0, 0.0, 1.0, //color del vertice verde abajo izq.
-            0.0, 0.0, 1.0, 1.0, // color del vertice azul abajo der.
-             1.0, 0.0, 1.0, 1.0,  //*cambio 
-             1.0, 0.0, 0.0, 1.0,  //color del vertice rojo 
+            0.0, 0.0, 0.0, 0.0, //color del vertice negro arriba
+            1.0, 0.0, 1.0, 1.0, //color del vertice 
+            1.0, 0.0, 0.0, 1.0, // color del vertice rojo abajo der.
+             0.0, 1.0, 0.0, 1.0,  //color verde 
+             0.0, 0.0, 1.0, 1.0,  //color del vertice azul 
              0.0, 0.0, 1.0, 1.0,  // color del vertice azul 
              0.0, 1.0, 0.0, 1.0   //color del vertice verde 
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
         triangleVertexColorBuffer.itemSize = 3;//Tamano del color
-        triangleVertexColorBuffer.numItems = 1;//Numero vertices del color
+        triangleVertexColorBuffer.numItems = 7;//Numero vertices del color
         
         
 //Dibujar pentagono
@@ -232,7 +233,7 @@ function mvPopMatrix() {
             var colors= [
                 1.0,0.0,0.0,1.0, //color del vertice rojo
                 0.0,1.0,0.0,1.0, //color del vertice verde
-                0.0,0.0,0.0,0.0,
+                0.0,0.0,0.0,0.0, //color negro
                 0.0,0.0,1.0,1.0, //color del vertice azul  
                 1.0,0.0,1.0,1.0    //*cambio        
             ];
@@ -269,7 +270,7 @@ function mvPopMatrix() {
                 0.0,1.0,0.0,1.0, //color del vertice verde
                 0.0,0.0,0.0,0.0,
                 0.0,0.0,1.0,1.0, //color del vertice azul  
-                1.0,0.0,1.0,1.0    //*cambio 
+                1.0,0.0,1.0,1.0    //magenta
             ];
         }
         
@@ -291,7 +292,7 @@ function mvPopMatrix() {
 //translate del triangulo
         mat4.translate(mvMatrix, [-3.0, -1.0, -20.0]);        
        mvPushMatrix();//sem4
-        mat4.rotate(mvMatrix, degToRad(rTri), [0, 1, 0]);//sem4
+        mat4.rotate(mvMatrix, degToRad(rTri), [1, 0, 0]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         setMatrixUniforms();        

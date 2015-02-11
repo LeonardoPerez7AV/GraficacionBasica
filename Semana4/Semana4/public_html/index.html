@@ -290,7 +290,7 @@ function mvPopMatrix() {
         mat4.identity(mvMatrix);
         
 //translate del triangulo
-        mat4.translate(mvMatrix, [-3.0, -1.0, -20.0]);        
+        mat4.translate(mvMatrix, [-5.0, -1.0, -20.0]);        
        mvPushMatrix();//sem4
         mat4.rotate(mvMatrix, degToRad(rTri), [1, 0, 0]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);

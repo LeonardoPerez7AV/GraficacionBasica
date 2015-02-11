@@ -121,17 +121,52 @@ varying vec4 vColor;
         shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     }
+    
+       
+
 
 
     var mvMatrix = mat4.create();
+    var mvMatrixStack = [];//sem4
     var pMatrix = mat4.create();
+    function mvPushMatrix() {//sem4
+    var copy = mat4.create();//
+    mat4.set(mvMatrix, copy);//
+    mvMatrixStack.push(copy);//sem4
+    }//sem4
+     var rTri = 0;   //sem4
+     var rSquare = 0;//sem4
+    
+    
+
+function degToRad(degrees) {//sem4
+        return degrees * Math.PI / 180;//
+}//sem4
+
+
+function mvPopMatrix() {
+    if (mvMatrixStack.length == 0) {
+        throw "Invalid popMatrix!";
+    }
+    mvMatrix = mvMatrixStack.pop();
+}
 
     function setMatrixUniforms() {
         gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
         gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
     }
+    var lastTime = 0;//sem4
+    function animate() {//
+        var timeNow = new Date().getTime();//
+        if (lastTime != 0) {//
+           var elapsed = timeNow - lastTime;//
+           rTri += (90 * elapsed) / 1000.0;//
+          rSquare += (75 * elapsed) / 1000.0;//
+        }//
+        lastTime = timeNow;//sem4
+    }
 
-glEnableClientState(GL_VERTEX_ARRAY);
+     glEnableClientState(GL_VERTEX_ARRAY);
 
 //Variables de Colores y posicion
     var triangleVertexPositionBuffer;
@@ -239,6 +274,8 @@ glEnableClientState(GL_VERTEX_ARRAY);
 //Aqui se manda a imprimir el dibujo
     function drawScene() {
         
+        
+       
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
@@ -248,30 +285,38 @@ glEnableClientState(GL_VERTEX_ARRAY);
         
         //translate del triangulo
         mat4.translate(mvMatrix, [-1.5, -1.0, -9.0]);
+        
+    mvPushMatrix();//sem4
+    mat4.rotate(mvMatrix, degToRad(rTri), [0, 1, 0]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         setMatrixUniforms();        
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);        
         gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
+        mvPopMatrix();//sem4
 
         //translate del pentagono
         mat4.translate(mvMatrix, [3.0, 0.0, -6.0]); 
+        mvPushMatrix();//sem4
+        mat4.rotate(mvMatrix, degToRad(rSquare), [0, 1, 0]);//sem4
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexPositionBuffer);//4-5
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,pentaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pentaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, pentaVertexPositionBuffer.numItems);//4-5
+       
         
             //translate del exagonal
-        mat4.translate(mvMatrix, [-2.0, 6.0, -6.0]); 
+        mat4.translate(mvMatrix, [-2.0, 0.0, -7.0]); 
         gl.bindBuffer(gl.ARRAY_BUFFER, exaVertexPositionBuffer);//4-5
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,exaVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5        
         gl.bindBuffer(gl.ARRAY_BUFFER, pentaVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, exaVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);//4-5
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, exaVertexPositionBuffer.numItems);//4-5
+ mvPopMatrix();
     }
 
 
@@ -284,8 +329,15 @@ glEnableClientState(GL_VERTEX_ARRAY);
 
         gl.clearColor(0.6, 0.0, 1.0, 1.0);//Color del fondo del canvas
         gl.enable(gl.DEPTH_TEST);
-
-        drawScene();
+        tick();  //sem4
+        //sem4 drawScene();
+    }
+    
+    function tick() { //sem4
+        requestAnimationFrame(tick);//sem4
+    
+        drawScene();//sem4
+        animate();//sem4
     }
 
 

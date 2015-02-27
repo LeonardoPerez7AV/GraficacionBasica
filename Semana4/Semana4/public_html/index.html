@@ -6,6 +6,7 @@ and open the template in the editor.
 -->
 
 
+
 <html>
 <head>
 
@@ -196,17 +197,18 @@ function mvPopMatrix() {
         triangleVertexColorBuffer =gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
         var colors = [
-            0.0, 0.0, 0.0, 0.0, //color del vertice negro arriba
-            1.0, 0.0, 1.0, 1.0, //color del vertice 
-            1.0, 0.0, 0.0, 1.0, // color del vertice rojo abajo der.
-             0.0, 1.0, 0.0, 1.0,  //color verde 
-             0.0, 0.0, 1.0, 1.0,  //color del vertice azul 
-             0.0, 0.0, 1.0, 1.0,  // color del vertice azul 
-             0.0, 1.0, 0.0, 1.0   //color del vertice verde 
+            0.0, 0.0, 1.0, 1.0, //color del vertice negro arriba
+            0.0, 1.0, 0.0, 1.0, //color del vertice 
+            0.0, 0.0, 1.0, 1.0, // color del vertice rojo abajo der.
+            0.0, 1.0, 0.0, 1.0,  //color verde 
+            0.0, 0.0, 0.0, 1.0,  //color del vertice azul 
+            0.0, 0.0, 1.0, 1.0,  // color del vertice azul 
+            0.0, 1.0, 0.0, 1.0,   //color del vertice verde 
+            0.0, 0.0, 1.0, 1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        triangleVertexColorBuffer.itemSize = 3;//Tamano del color
-        triangleVertexColorBuffer.numItems = 7;//Numero vertices del color
+        triangleVertexColorBuffer.itemSize = 4;//Tamano del color
+        triangleVertexColorBuffer.numItems = 8;//Numero vertices del color
         
         
 //Dibujar pentagono
@@ -335,7 +337,7 @@ function mvPopMatrix() {
         initShaders();
         initBuffers();
 
-        gl.clearColor(0.6, 0.0, 1.0, 1.0);//Color del fondo del canvas
+        gl.clearColor(1.0, 1.0, 0.0, 1.0);//Color del fondo del canvas
         gl.enable(gl.DEPTH_TEST);
         tick();  //sem4
         //sem4 drawScene();
@@ -359,8 +361,5 @@ function mvPopMatrix() {
 
 </body>
 </html>
-
-
-
 
 
